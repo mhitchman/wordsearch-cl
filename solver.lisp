@@ -58,6 +58,9 @@ Assume set is sorted."
 
 (defun start ()
   (let ((word-list (load-words-from-file)))
-    (dotimes (x 1)
-      (format t "~{~10a~}" (subseq-or-end (search-word-list word-list (sort (get-letter-set) #'char<)) 0 10))
-    (format t "~%"))))
+    (format t "Word list length: ~a~%" (length word-list))
+    (loop
+       (format t "~2&~{~10a~}" (subseq-or-end (search-word-list word-list (sort (get-letter-set) #'char<)) 0 10))
+       (unless (y-or-n-p "~%Again: ")
+	 (return))
+       (format t "~%"))))
