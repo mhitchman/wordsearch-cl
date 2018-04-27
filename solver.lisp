@@ -26,9 +26,9 @@ Assume set is sorted."
 (defun search-word-list (word-list set)
   "Takes in the word set and searches for words that match. Returns a list of matching words sorted with longest first"
   (let ((result ()))
-    (dotimes (i (length word-list))
-      (if (find-match (first (elt word-list i)) set)
-	  (push (second (elt word-list i)) result)))
+    (dotimes (i (length (first word-list)))
+      (if (find-match (elt (first word-list) i) set)
+	  (push (elt (second word-list) i) result)))
     (sort result (lambda (x y) (> (length x) (length y))))))
 
 (defun get-letter-set ()
@@ -47,18 +47,18 @@ Assume set is sorted."
 
 (defun load-words-from-file ()
   "Returns a list of pairs (sorted word , word)"
-  (let ((word-list ()))
+  (let ((word-list (list (make-array 200 :adjustable t :fill-pointer 0)
+			 (make-array 200 :adjustable t :fill-pointer 0))))
     (with-open-file (wordfile +word-list-file+)
       (loop for line = (read-line wordfile nil)
-	    while line do (push (list
-				 (sort (copy-seq line) #'char<)
-				 line)
-				word-list)))
-    (reverse word-list)))
+	 while line do (progn
+			 (vector-push-extend (sort (copy-seq line) #'char<) (first word-list))
+			 (vector-push-extend line (second word-list)))))
+    (map 'list #'reverse word-list)))
 
 (defun start ()
   (let ((word-list (load-words-from-file)))
-    (format t "Word list length: ~a~%" (length word-list))
+    (format t "Word list length: ~a~%" (length (second word-list)))
     (loop
        (format t "~2&~{~10a~}" (subseq-or-end (search-word-list word-list (sort (get-letter-set) #'char<)) 0 10))
        (unless (y-or-n-p "~%Again: ")
