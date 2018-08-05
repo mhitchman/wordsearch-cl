@@ -1,0 +1,2 @@
+* TODO Ask for word list file on startup
+- [ ] Check file exists before using it
