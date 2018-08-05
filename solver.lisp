@@ -2,7 +2,6 @@
 (in-package :ctdnslvr)
 
 (defconstant +set-length+ 9)
-(defconstant +word-list-file+ "oxford.txt")
 
 (defmacro subseq-or-end (sequence start end)
   "Returns subsequence between start and end unless end is larger than the sequence. Then just returns the whole sequence"
@@ -45,24 +44,37 @@ Assume set is sorted."
 	      (return (subseq set 0 +set-length+)))
 	     (t (return set))))))  
 
-(defun load-words-from-file ()
-  "Returns a list of pairs (sorted word , word)"
+(defun load-words-from-file (word-list-file)
+  "Returns a vector of pairs (sorted word , word)"
   (let ((word-list (list (make-array 200 :adjustable t :fill-pointer 0)
 			 (make-array 200 :adjustable t :fill-pointer 0))))
-    (with-open-file (wordfile +word-list-file+)
+    (with-open-file (wordfile word-list-file)
       (loop for line = (read-line wordfile nil)
 	 while line do (progn
 			 (vector-push-extend (sort (copy-seq line) #'char<) (first word-list))
 			 (vector-push-extend line (second word-list)))))
     (map 'list #'reverse word-list)))
 
+(defun prompt-for-word-file ()
+  "Prompt user for the location of the word file"
+  (format *query-io* "Input the path to the word list file: ")
+  (force-output *query-io*)
+  (loop
+     (let ((wordlist-path (uiop:file-exists-p (read-line *query-io*))))
+       (if wordlist-path
+	   (return wordlist-path)
+	   (progn
+	     (format *query-io* "Invalid path! Please try again: ")
+	     (force-output *query-io*))))))
+
 (defun start ()
-  (let ((word-list (load-words-from-file)))
+  (let ((word-list (load-words-from-file (prompt-for-word-file))))
     (format t "Word list length: ~a~%" (length (second word-list)))
     (loop
-       (format t "~2&~{~10a~}~%"
+       (format t "~2&~{~10a~}"
 	       (subseq-or-end (search-word-list
 			       word-list (sort (get-letter-set) #'char<)) 0 10))
-       (unless (y-or-n-p "Again: ")
+       (force-output *standard-output*)
+       (unless (y-or-n-p "~%Again: ")
        	 (return))
        (format t "~%"))))
