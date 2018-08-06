@@ -1,3 +1,3 @@
-(defpackage :ctdnslvr
+(defpackage :wordsearcher
   (:use :common-lisp)
   (:export :start))

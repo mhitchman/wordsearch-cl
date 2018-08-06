@@ -1,0 +1,20 @@
+
+Takes a set of 9 letters and returns the longest words in which all the letters of the word are in the provided set.
+Letters are only counted once in the set (so 'a','b' does not match the word "baa").
+Like that what they do on a long running TV series in which one can win a teapot.
+
+Words are looked for in a word list file where each word is on a separate line. This file needs to be provided by the user.
+
+* Running
+/N.B. I've only tested this with SBCL on Linux though it should work with other Lisp implementations/
+
+1. Change into the project directory
+2. Start the REPL
+3. Load the solver.lisp file (=(load "solver.lisp")=)
+4. =(wordsearcher:start)=
+
+* Building a standalone binary
+
+1. Either place the project or a symlink to the project in ASDF's central registry (if you've installed Quicklisp placing it in =~/quicklisp/local-projects/= works).
+2. =cd wordsearch-cl=
+3. Run =sbcl --eval "(asdf:operate :build-op :wordsearcher)"=. The binary should be built in the build folder.

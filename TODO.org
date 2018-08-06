@@ -1,5 +1,0 @@
-* DONE Ask for word list file on startup
-- [X] Check file exists before using it
-* TODO Rename project and package name
-* TODO Consider a format-and-force macro
-* TODO Write a readme

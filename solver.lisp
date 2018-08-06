@@ -1,5 +1,5 @@
 (load "packages.lisp")
-(in-package :ctdnslvr)
+(in-package :wordsearcher)
 
 (defconstant +set-length+ 9)
 
