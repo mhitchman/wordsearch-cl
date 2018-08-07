@@ -12,7 +12,7 @@
 					     ,end)))))
 
 (defun find-match (word set)
-  "Check whether word matches the set. Returns the word if it is otherwise returns nil.
+  "Check whether word matches the set. Returns t if it is otherwise returns nil.
 Assume set is sorted."
   (let ((start 0))
     (sort word #'char<)
@@ -39,6 +39,7 @@ Assume set is sorted."
        (setf set (remove #\space set))
        (cond ((< (length set) +set-length+)
 	      (format *query-io* "Not enough letters (~a/~a). Add more: " (length set) +set-length+)
+	      (force-output *query-io*)
 	      (setf set (concatenate 'string set (read-line *query-io*))))
 	     ((> (length set) +set-length+)
 	      (return (subseq set 0 +set-length+)))
